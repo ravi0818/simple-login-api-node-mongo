@@ -11,7 +11,7 @@ router.get("/:id", getById);
 router.put("/:id", update);
 router.delete("/:id", _delete);
 
-router.post("/audit", getAudit);
+router.post("/audit", check, getAudit);
 router.post("/logout", logout);
 
 module.exports = router;
@@ -21,6 +21,11 @@ function getAudit(req, res, next) {
     .getAudit()
     .then((users) => res.json(users))
     .catch((err) => next(err));
+}
+
+function check(req, res, next) {
+  //   console.log(req);
+  next();
 }
 
 function logout(req, res, next) {
@@ -33,7 +38,7 @@ function logout(req, res, next) {
 function authenticate(req, res, next) {
   const { username, password } = req.body;
   const ip = req.ip;
-  console.log(ip);
+  //   console.log(ip);
   userService
     .authenticate({ username, password, ip })
     .then((user) =>
