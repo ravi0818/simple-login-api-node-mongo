@@ -11,7 +11,7 @@ router.get("/:id", getById);
 router.put("/:id", update);
 router.delete("/:id", _delete);
 
-router.get("/audit", getAudit);
+router.post("/audit", getAudit);
 router.post("/logout", logout);
 
 module.exports = router;

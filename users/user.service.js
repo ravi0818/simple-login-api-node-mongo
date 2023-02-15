@@ -56,7 +56,7 @@ async function getAll() {
 
 async function getAudit() {
   console.log("workinng...");
-  return await User.find();
+  return await User.find().select("username lastLogin lastLogout");
 }
 
 async function getById(id) {
