@@ -1,6 +1,9 @@
 ﻿const express = require("express");
 const router = express.Router();
 const userService = require("./user.service");
+const db = require("_helpers/db");
+const errorHandler = require("../_helpers/error-handler");
+const User = db.User;
 
 // routes
 router.post("/authenticate", authenticate);
@@ -23,9 +26,20 @@ function getAudit(req, res, next) {
     .catch((err) => next(err));
 }
 
-function check(req, res, next) {
-  //   console.log(req);
-  next();
+async function check(req, res, next) {
+  console.log(req.headers.authorization.split(" ")[1]);
+  const userId = Buffer.from(req.headers.authorization.split(" ")[1], "base64")
+    .toString()
+    .split(":")[3]
+    .split('"')[1];
+
+  const user = await User.findOne({ _id: userId });
+
+  //   console.log(user);
+  if (user.role === "auditor") next();
+  else {
+    res.status(401).send("Unauthorized");
+  }
 }
 
 function logout(req, res, next) {
